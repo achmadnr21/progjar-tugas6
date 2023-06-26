@@ -1,69 +1,73 @@
 CHAT SERVER
-TUJUAN: melayani client dalam mengirim request
+melayani request client
 
-ATURAN PROTOKOL:
-- client harus mengirimkan request dalam bentuk string
-- string harus dalam format
-  REQUEST spasi PARAMETER
-- PARAMETER sesuai dengan jenis request client
+penggunaan protokol:
+- request yang dikirim berupa string
+- format string adalah:
+	<request> <parameter>
+- parameter yang digunakan harus sesuai dengan request yang ingin dijalankan.
 
-REQUEST YANG DILAYANI:
+Requests List:
 - informasi umum:
-  * Jika command tidak dikenali akan menghasilkan pesan
+  * Ketika Command yang diberikan tidak sesuai, akan mereturn
     - status: ERROR
-    - message: Protocol Tidak Benar
-  * Jika melakukan request tanpa authentikasi (selain request auth):
+    - message: Protocol Invalid!
+  * Ketika melakukan request tanpa auth atau bisa dibilang belum login, akan mereturn:
     - status: ERROR
-    - message: Session Tidak Ditemukan
-  * Semua result akan diberikan dalam bentuk JSON dan diakhiri
-    dengan character ascii code #13#10#13#10 atau "\r\n\r\n"
+    - message: Session not Found!
+  * Results akan diberikan dalam bentuk json lalu diakhiri dengan character ascii code #13#10#13#10 atau "\r\n\r\n"
 
-AUTH
-* TUJUAN: memverifikasi user
-* PARAMETER:
-    - PARAMETER1 : username
-    - PARAMETER2 : password
-* RESULT:
-- BERHASIL:
+auth:
+* tujuan: verifikasi user
+* parameter:
+    <username> <password>
+* result:
+- sukses:
   - status: OK
   - tokenid: tokenid
-- GAGAL:
+- gagal:
   - status: ERROR
-  - message: pesan kesalahan
+  - message: error message
 
 SEND
-* TUJUAN: mengirimkan pesan ke spesifik clien
+* tujuan: mengirim pesan kepada pengguna lain
 * PARAMETER:
-  - PARAMETER1 : username destinasi
-  - PARAMETER2 : pesan
-* RESULT:
-- BERHASIL:
+  <username user dituju> <pesan>
+* result:
+- sukses:
   - status: OK
   - message: Message Sent
-- GAGAL:
+- gagal:
   - status: ERROR
-  - data: pesan kesalahan
+  - data: error message
 
-INBOX
-* TUJUAN: untuk mengupload file ke dalam server
-* PARAMETER:tidak ada
-* RESULT:
-- BERHASIL:
+inbox
+* tujuan: mengecek pesan masuk
+* parameter: no param
+* result:
+- sukses:
   - status: OK
   - messages: dict pesan
-- GAGAL:
+- gagal:
   - status: ERROR
-  - message: pesan kesalahan
+  - message: error message
 
 
-GROUP
-* TUJUAN: untuk menghapus file yang disebutkan dalam parameter
-* PARAMETER:
-  - PARAMETER1 : nama grup
-* RESULT:
-- BERHASIL:
-  - status: OK
-  - data: keterangan telah keluar dari grup
-* KETERANGAN:
+group
+* tujuan: untuk membuat atau masuk kedalam sebuah group chat
+* parameter:
+  <nama group>
+* result:
+- sukses:
+  akan masuk kedalam group yang dituju.
+- gagal:
 - tidak ada pesan kesalahan pada command GROUP, sehingga bila tidak ada grup berdasarkan nama grup yang dimasukkan,
   akan dibuat grup yang baru
+  
+exit
+* tujuan: untuk keluar dari group chat.
+* parameter: no param
+* result:
+- sukses:
+  - status: OK
+  - messages: keluar dari server
